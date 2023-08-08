@@ -1,6 +1,7 @@
 import requests
 from tqdm import tqdm
 import json
+import datetime
 
 class VK:
 
@@ -25,7 +26,7 @@ class VK:
                     'likes': photo['likes']['count'],
                     'type': size,
                     'url': photo_url,
-                    'id': photo['id']
+                    'date': photo['date']
                 }
             )
        return profile_photos_url
@@ -61,10 +62,11 @@ class YaDisck:
                 self.json.append({'file_name': urls['likes'], 'size': urls['type']})
             else:
                 diсt_names.append(urls['likes'])
+                date = datetime.datetime.fromtimestamp(urls['date'])
                 path = 'disk:/{}/{}{}.jpg'.format(
-                    folder_name, urls['likes'], f"(id{urls['id']})"
+                    folder_name, urls['likes'], f'{date:-%Y-%m-%d}'
                 )
-                self.json.append({'file_name': f"{urls['likes']}(id{urls['id']})", 'size': urls['type']})
+                self.json.append({'file_name': f"{urls['likes']}{date:-%Y-%m-%d}", 'size': urls['type']})
             params = {'path': path, 'url': urls['url']}
             requests.post(url, headers=headers, params=params)
         print('Фотографии загружены')
@@ -84,9 +86,12 @@ def find_max_size(dict_sizes):
 
 
 if __name__ == '__main__':
-    access_token = input('Введите токен ВК: ') 
-    user_id = input('Введите ID пользователя: ') 
-    ya_token = input('Введите токен Я.Диск: ') 
+    access_token = 'vk1.a.aDilNhpoUhffd6M4Wco96-lMvxDA16Y7heq7ksWRg0x4WBO3LZAWmKqBL4HO-llSaS9ZI8k0tG7qN7lqX6aMWI-wU2hdEBe7DjlloaxigjWRxP9oehtanrkWoGK_LMV1mAU7GIFAYoU1pdeGkOWu-ecJY_KVLzIOtjbbCuQcaQm6fWZkaDPcz7Yllum8mIs1_sIXl8tDT90fa5kRm1EPew'
+    user_id = 201669985
+    ya_token = 'y0_AgAAAAA0KJauAADLWwAAAADkDekeZiFNSEeQQIqqtfBmstbZMlOkJt8'
+    # access_token = input('Введите токен ВК: ') 
+    # user_id = input('Введите ID пользователя: ') 
+    # ya_token = input('Введите токен Я.Диск: ') 
     vk = VK(access_token, user_id)
     ya_disk = YaDisck(ya_token)
     folder_name = ya_disk.create_folder_yadisck('vk')
