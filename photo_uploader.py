@@ -46,8 +46,7 @@ class YaDisck:
         params = {'path': 'disk:/{}/'.format(folder_name)}
         headers = self.get_headers()
         url = 'https://cloud-api.yandex.net/v1/disk/resources'
-        response = requests.put(url, headers=headers, params=params)
-        response.raise_for_status
+        response = requests.put(url, headers=headers, params=params
         return folder_name
 
     def download_yandex_disk(self, folder_name, url_download_photos):
